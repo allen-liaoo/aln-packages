@@ -1,7 +1,7 @@
 {
-  pkgs,
-  lib,
   wrappers,
+  pkgs, # instantiated with system
+  lib,
 }:
 
 lib.pipe ./. [
@@ -15,7 +15,7 @@ lib.pipe ./. [
     in
     {
       name = wrapperName;
-      value = (wrappers.wrappers.${wrapperName}.apply myWrapper).wrap { inherit pkgs; };
+      value = (wrappers.wrappers.${wrapperName}.apply myWrapper).wrap { inherit pkgs; }; # apply config then instantiate with pkg (with system)
     }
   ))
 ]
