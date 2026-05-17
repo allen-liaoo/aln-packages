@@ -10,30 +10,34 @@
       packages' = (
         system:
         let
-          pkgs = import nixpkgs { inherit system; config.allowUnfree = true; };
+          pkgs = import nixpkgs {
+            inherit system;
+            config.allowUnfree = true;
+          };
           lib = pkgs.lib;
         in
-        (
-          import ./wrappers { inherit wrappers pkgs lib; }
-        ) //
-        (
-          import ./pkgs { inherit pkgs; }
-        )
+        (import ./wrappers { inherit wrappers pkgs lib; }) // (import ./pkgs { inherit pkgs; })
       );
     in
     {
       packages = forAllSystems packages';
       legacyPackages = forAllSystems packages';
-      apps = forAllSystems (system: (with nixpkgs.lib;
-        pipe system [
-          packages'
-          (filterAttrs (_: p: p ? meta && p.meta ? mainProgram))
-          (mapAttrs (n: p: {
-            type = "app";
-            program = "${p}/bin/${p.meta.mainProgram}";
-          }))
-        ]
-      ));
+      apps = forAllSystems (
+        system:
+        (
+          with nixpkgs.lib;
+          pipe system [
+            packages'
+            (filterAttrs (_: p: p ? meta && p.meta ? mainProgram))
+            (mapAttrs (
+              n: p: {
+                type = "app";
+                program = "${p}/bin/${p.meta.mainProgram}";
+              }
+            ))
+          ]
+        )
+      );
     };
 
   inputs = {

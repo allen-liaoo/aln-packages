@@ -21,14 +21,13 @@ let
   };
 in
 {
-  channels = 
-     lib.mkMerge [
-      (cable "channels")
-      (cable "files") # fd
-      (cable "fish-history") # fish
-      (cable "fonts") # fc-list
-      (cable "journal") # journalctl
-      (cable "man-pages") # apropos, man
-      (cable "text") # rg
+  channels = lib.mkMerge [
+    (cable "channels")
+    (cable "files") # fd
+    (cable "fish-history") # fish
+    (cable "fonts") # fc-list
+    (cable "journal") # journalctl
+    (cable "man-pages") # apropos, man
+    (cable "text") # rg
   ];
 }
