@@ -7,7 +7,7 @@
 }:
 
 let
-  tvCables = pkgs.fetchFromGitHub {
+  television = pkgs.fetchFromGitHub {
     owner = "alexpasmantier";
     repo = "television";
     rev = "0.15.6";
@@ -17,7 +17,26 @@ let
     ];
   };
   cable = c: {
-    ${c} = "${tvCables}/cable/unix/${c}.toml";
+    ${c} = "${television}/cable/unix/${c}.toml";
+  };
+  nix-search-tv = {
+    # see https://github.com/3timeslazy/nix-search-tv#television
+    metadata = {
+      name = "nix-search-tv";
+      description = "Search nix options and packages";
+    };
+
+    source.command = "${lib.getExe pkgs.nix-search-tv} print";
+    preview.command = ''${lib.getExe pkgs.nix-search-tv} preview "{}"'';
+
+    actions.run = {
+      command = ''nix run {replace:s/\/ /#/g}'';
+      mode = "fork";
+    };
+    actions.shell = {
+      command = ''nix shell {replace:s/\/ /#/g}'';
+      mode = "execute";
+    };
   };
 in
 {
@@ -29,5 +48,6 @@ in
     (cable "journal") # journalctl
     (cable "man-pages") # apropos, man
     (cable "text") # rg
+    { inherit nix-search-tv; }
   ];
 }
