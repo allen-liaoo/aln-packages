@@ -7,7 +7,7 @@
     }:
     let
       forAllSystems = with nixpkgs.lib; genAttrs platforms.all;
-      packages' = (
+      pkgsPerSystem = (
         system:
         let
           pkgs = import nixpkgs {
@@ -16,18 +16,18 @@
           };
           lib = pkgs.lib;
         in
-        (import ./wrappers { inherit wrappers pkgs lib; }) // (import ./pkgs { inherit pkgs; })
+        (import ./wrappers { inherit wrappers pkgs lib; }) // (import ./pkgs { inherit pkgs lib; })
       );
     in
     {
-      packages = forAllSystems packages';
-      legacyPackages = forAllSystems packages';
+      packages = forAllSystems pkgsPerSystem;
+      legacyPackages = forAllSystems pkgsPerSystem;
       apps = forAllSystems (
         system:
         (
           with nixpkgs.lib;
           pipe system [
-            packages'
+            pkgsPerSystem
             (filterAttrs (_: p: p ? meta && p.meta ? mainProgram))
             (mapAttrs (
               n: p: {
@@ -43,7 +43,8 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     wrappers = {
-      url = "github:allen-liaoo/nix-wrapper-modules";
+      url = "git+file:///home/allenl/Code/nix-wrapper-modules";
+      #"github:allen-liaoo/nix-wrapper-modules";
       #"github:BirdeeHub/nix-wrapper-modules";
       inputs.nixpkgs.follows = "nixpkgs";
     };

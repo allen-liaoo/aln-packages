@@ -1,13 +1,22 @@
 {
-  pkgs ? import <nixpkgs> { },
+  pkgs,
+  lib,
 }:
 
-{
-  typst-mcp = pkgs.python3Packages.callPackage ./typst-mcp/typst-mcp.nix rec {
-    typst = pkgs.typst;
-    typst-docs = pkgs.callPackage ./typst-mcp/typst-docs.nix {
-      typst = typst;
-    };
-    mcp = pkgs.python3Packages.callPackage ./typst-mcp/mcp.nix { };
-  };
-}
+lib.pipe ./. [
+  builtins.readDir
+  (lib.filterAttrs (n: t: t == "directory" || (n != "default.nix" && lib.hasSuffix ".nix" n)))
+  (lib.mapAttrs' (
+    n: t:
+    if t == "directory" then
+      {
+        name = n;
+        value = import ./${n} { inherit pkgs; };
+      }
+    else 
+      {
+        name = lib.removeSuffix ".nix" n;
+        value = import ./${n} { inherit pkgs; };
+      }
+  ))
+]
