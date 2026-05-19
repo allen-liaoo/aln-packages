@@ -29,15 +29,15 @@
         ]
       },
       "locked": {
-        "lastModified": 1778952794,
-        "narHash": "sha256-TQjjHaGnwkuNwGZjR2SWl3t7OK/0nM5PsX/v7a8WQG0=",
-        "owner": "allen-liaoo",
+        "lastModified": 1779158506,
+        "narHash": "sha256-UsvCuaxQPL1CEOeDnIW/Cn97ozJuNE5cq4Rp5Yi5VxI=",
+        "owner": "BirdeeHub",
         "repo": "nix-wrapper-modules",
-        "rev": "ae502f23152914e12559dd9961fd8767a47d0075",
+        "rev": "6d6695d1140bdbdada1bb4519328818364ec9311",
         "type": "github"
       },
       "original": {
-        "owner": "allen-liaoo",
+        "owner": "BirdeeHub",
         "repo": "nix-wrapper-modules",
         "type": "github"
       }

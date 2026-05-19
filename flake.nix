@@ -43,9 +43,7 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     wrappers = {
-      url = "git+file:///home/allenl/Code/nix-wrapper-modules";
-      #"github:allen-liaoo/nix-wrapper-modules";
-      #"github:BirdeeHub/nix-wrapper-modules";
+      url = "github:BirdeeHub/nix-wrapper-modules";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
