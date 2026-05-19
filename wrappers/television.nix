@@ -14,7 +14,6 @@ let
     hash = "sha256-vA9eUzgkfh1UEjTfswJaWe0Z20xUqx29nunPIQs7oyc=";
     sparseCheckout = [
       "/cable/unix"
-      "/themes"
     ];
   };
   cable = c: {
