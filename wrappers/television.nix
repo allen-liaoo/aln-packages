@@ -14,10 +14,11 @@ let
     hash = "sha256-vA9eUzgkfh1UEjTfswJaWe0Z20xUqx29nunPIQs7oyc=";
     sparseCheckout = [
       "/cable/unix"
+      "/themes"
     ];
   };
   cable = c: {
-    ${c} = "${television}/cable/unix/${c}.toml";
+    ${c} = builtins.fromTOML (builtins.readFile "${television}/cable/unix/${c}.toml");
   };
   nix-search-tv = {
     # see https://github.com/3timeslazy/nix-search-tv#television
@@ -25,7 +26,6 @@ let
       name = "nix-search-tv";
       description = "Search nix options and packages";
     };
-
     source.command = "${lib.getExe pkgs.nix-search-tv} print";
     preview.command = ''${lib.getExe pkgs.nix-search-tv} preview "{}"'';
 
@@ -42,6 +42,9 @@ in
 {
   channels = lib.mkMerge [
     (cable "channels")
+    {
+      channels.preview.command = lib.mkForce "bat -pn --color always ${config.channelsDir}/{}.toml";
+    }
     (cable "files") # fd
     (cable "fish-history") # fish
     (cable "fonts") # fc-list
@@ -49,5 +52,11 @@ in
     (cable "man-pages") # apropos, man
     (cable "text") # rg
     { inherit nix-search-tv; }
+  ];
+
+  runtimePkgs = with pkgs; [
+    bat
+    fd 
+    ripgrep
   ];
 }
